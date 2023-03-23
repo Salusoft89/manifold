@@ -334,6 +334,47 @@ Module.setup = function() {
     return out;
   };
 
+  function polygons3int(polygonsVec) {
+    return toVec(new Module.Vector3_int(), polygonsVec, (polygons) =>
+      toVec(new Module.Vector2_int(), polygons, (poly) =>
+        toVec(new Module.Vector_int(), poly, (p) => p)
+      )
+    );
+  }
+
+  function disposePolygons3(polygonsVec) {
+    for (let i = 0; i < polygonsVec.size(); i++) {
+      const polygons = polygonsVec.get(i);
+      for (let j = 0; j < polygons.size(); j++) {
+        polygons.get(j).delete();
+      }
+      polygons.delete();
+    }
+    polygonsVec.delete();
+  }
+
+  Module.polyhedron = function (vertPos, polygonsVec, normals) {
+    const _vertPos = toVec(new Module.Vector_vec3(), vertPos, (p) => ({
+      x: p[0],
+      y: p[1],
+      z: p[2],
+    }));
+    const _polygonsVec = polygons3int(polygonsVec);
+    const _normals = toVec(new Module.Vector_vec3(), normals, (p) => ({
+      x: p[0],
+      y: p[1],
+      z: p[2],
+    }));
+    const result = Module._Polyhedron(_vertPos, _polygonsVec, _normals);
+    const _triFace = result.triFace;
+    result.triFace = fromVec(_triFace);
+    _triFace.delete();
+    _vertPos.delete();
+    _normals.delete();
+    disposePolygons3(_polygonsVec);
+    return result;
+  };
+
   function batchbool(name) {
     return function(...args) {
       if (args.length == 1) args = args[0];

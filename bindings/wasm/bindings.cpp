@@ -222,6 +222,10 @@ EMSCRIPTEN_BINDINGS(whatever) {
       .field("vertMeanCurvature", &Curvature::vertMeanCurvature)
       .field("vertGaussianCurvature", &Curvature::vertGaussianCurvature);
 
+  value_object<PolyhedronOutput>("polyhedronOutput")
+      .field("manifold", &PolyhedronOutput::manifold)
+      .field("triFace", &PolyhedronOutput::triFace);
+
   register_vector<glm::ivec3>("Vector_ivec3");
   register_vector<glm::vec3>("Vector_vec3");
   register_vector<glm::vec2>("Vector_vec2");
@@ -230,6 +234,9 @@ EMSCRIPTEN_BINDINGS(whatever) {
   register_vector<Manifold>("Vector_manifold");
   register_vector<Smoothness>("Vector_smoothness");
   register_vector<glm::vec4>("Vector_vec4");
+  register_vector<int>("Vector_int");
+  register_vector<std::vector<int>>("Vector2_int");
+  register_vector<std::vector<std::vector<int>>>("Vector3_int");
 
   class_<Manifold>("Manifold")
       .constructor(&FromMeshJS)
@@ -268,6 +275,7 @@ EMSCRIPTEN_BINDINGS(whatever) {
   function("_Extrude", &Extrude);
   function("_Revolve", &Revolve);
   function("_LevelSet", &LevelSetJs);
+  function("_Polyhedron", &Manifold::Polyhedron);
 
   function("_unionN", &UnionN);
   function("_differenceN", &DifferenceN);

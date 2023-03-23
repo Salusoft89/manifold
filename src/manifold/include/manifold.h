@@ -32,6 +32,7 @@ ExecutionParams& ManifoldParams();
 
 class CsgNode;
 class CsgLeafNode;
+struct PolyhedronOutput;
 
 /** @defgroup Core
  *  @brief The central classes of the library
@@ -68,6 +69,11 @@ class Manifold {
                           glm::vec2 scaleTop = glm::vec2(1.0f));
   static Manifold Revolve(const CrossSection& crossSection,
                           int circularSegments = 0);
+
+  static PolyhedronOutput Polyhedron(
+      const std::vector<glm::vec3> vertPos,
+      const std::vector<std::vector<std::vector<int>>>& polygonsVec,
+      const std::vector<glm::vec3> normal);
   ///@}
 
   /** @name Topological
@@ -177,6 +183,11 @@ class Manifold {
   mutable std::shared_ptr<CsgNode> pNode_;
 
   CsgLeafNode& GetCsgLeafNode() const;
+};
+
+struct PolyhedronOutput {
+  Manifold manifold;
+  std::vector<int> triFace;
 };
 /** @} */
 }  // namespace manifold

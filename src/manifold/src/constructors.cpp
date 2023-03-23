@@ -414,6 +414,71 @@ Manifold Manifold::Revolve(const CrossSection& crossSection,
   return Manifold(pImpl_);
 }
 
+PolygonsIdx To2DPolygon(const std::vector<std::vector<int>>& polygons,
+                        const glm::mat3x2 projection,
+                        const std::vector<glm::vec3>& vertPos) {
+  PolygonsIdx polys;
+  for (int i = 0; i < polygons.size(); i++) {
+    std::vector<PolyVert> vertices(polygons[i].size());
+    for (int j = 0; j < polygons[i].size(); j++) {
+      const int vert_i = polygons[i][j];
+      auto& vert = vertPos[vert_i];
+      vertices[j] = {projection * vert, vert_i};
+    }
+    polys.push_back({vertices});
+  }
+  return polys;
+}
+
+/**
+ * Constructs manifold from a vector of faces.
+ *
+ * @param vertPos Vertex positions
+ * @param polygonsVec Polygons defining the faces
+ * @param normals Normals of the faces
+ */
+PolyhedronOutput Manifold::Polyhedron(
+    const std::vector<glm::vec3> vertPos,
+    const std::vector<std::vector<std::vector<int>>>& polygonsVec,
+    const std::vector<glm::vec3> normals) {
+  auto pImpl_ = std::make_shared<Impl>();
+  for (auto& v : vertPos) {
+    pImpl_->vertPos_.push_back(v);
+  }
+  VecDH<glm::ivec3> triVerts;
+  std::vector<int> triFace;
+
+  for (int i = 0; i < polygonsVec.size(); i++) {
+    auto& polygons = polygonsVec[i];
+    std::vector<glm::ivec3> tris;
+
+    if (polygons.size() == 1 && polygons[0].size() == 3) {
+      auto& p = polygons[0];
+      tris.push_back({p[0], p[1], p[2]});
+    } else if (polygons.size() == 1 && polygons[0].size() == 4) {
+      auto& p = polygons[0];
+      tris.push_back({p[0], p[1], p[3]});
+      tris.push_back({p[1], p[2], p[3]});
+    } else {
+      auto& normal = normals[i];
+      const glm::mat3x2 projection = GetAxisAlignedProjection(normal);
+      auto polygons2d = To2DPolygon(polygons, projection, vertPos);
+      tris = Triangulate(polygons2d);
+    }
+    for (auto& tri : tris) {
+      triVerts.push_back(tri);
+      triFace.push_back(i);
+    }
+  }
+  pImpl_->CreateHalfedges(triVerts);
+  pImpl_->Finish();
+  pImpl_->meshRelation_.originalID = ReserveIDs(1);
+  pImpl_->InitializeOriginal();
+  pImpl_->CreateFaces();
+  auto manifold = Manifold(pImpl_);
+  return {manifold, triFace};
+}
+
 /**
  * Constructs a new manifold from a vector of other manifolds. This is a purely
  * topological operation, so care should be taken to avoid creating

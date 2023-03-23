@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Box, Curvature, Mat4, Polygons, Properties, SealedFloat32Array, SealedUint32Array, Smoothness, Vec2, Vec3} from './manifold-global-types';
+import {Box, Curvature, Mat4, Polygons, Properties, SealedFloat32Array,
+  SealedUint32Array, Smoothness, Vec2, Vec3, PolyhedronOutput} from './manifold-global-types';
 
 /**
  * Constructs a unit cube (edge lengths all one), by default in the first
@@ -129,6 +130,18 @@ export function intersection(a: Manifold, b: Manifold): Manifold;
 export function union(manifolds: Manifold[]): Manifold;
 export function difference(manifolds: Manifold[]): Manifold;
 export function intersection(manifolds: Manifold[]): Manifold;
+
+
+/**
+ * Constructs manifold from a vector of faces.
+ *
+ * @param vertPos Vertex positions
+ * @param polygonsVec Polygons defining the faces
+ * @param normals Normals of the faces
+ */
+export function polyhedron(
+    vertPos: Vec3[], polygonsVec: number[][][],
+    normals: Vec3[]): PolyhedronOutput
 
 /**
  * Constructs a new manifold from a list of other manifolds. This is a purely
