@@ -63,7 +63,3 @@ export type Curvature = {
   vertMeanCurvature: number[],
   vertGaussianCurvature: number[]
 };
-export type PolyhedronOutput = {
-  manifold: Manifold,
-  triFace: number[],
-}

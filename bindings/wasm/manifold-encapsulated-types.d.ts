@@ -141,7 +141,10 @@ export function intersection(manifolds: Manifold[]): Manifold;
  */
 export function polyhedron(
     vertPos: Vec3[], polygonsVec: number[][][],
-    normals: Vec3[]): PolyhedronOutput
+    normals: Vec3[]): {
+      manifold: Manifold,
+      triFace: number[],
+    }
 
 /**
  * Constructs a new manifold from a list of other manifolds. This is a purely
