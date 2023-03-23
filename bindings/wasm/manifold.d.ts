@@ -31,6 +31,7 @@ export interface ManifoldStatic {
   intersection: typeof T.intersection;
   compose: typeof T.compose;
   levelSet: typeof T.levelSet;
+  polyhedron: typeof T.polyhedron;
   setMinCircularAngle: typeof T.setMinCircularAngle;
   setMinCircularEdgeLength: typeof T.setMinCircularEdgeLength;
   setCircularSegments: typeof T.setCircularSegments;
