@@ -522,3 +522,14 @@ TEST(Manifold, Invalid) {
   EXPECT_EQ(Manifold::Extrude(empty_circ, 10.).Status(), invalid);
   EXPECT_EQ(Manifold::Revolve(empty_sq).Status(), invalid);
 }
+
+TEST(Manifold, Polyhedron) {
+  std::vector<glm::vec3> vertPos = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+  std::vector<std::vector<std::vector<int>>> polygonsVec = {
+      {{0, 1, 3}}, {{1, 0, 2}}, {{3, 1, 2}}, {{3, 2, 0}}};
+  std::vector<glm::vec3> normals = {};
+
+  auto out = Manifold::Polyhedron(vertPos, polygonsVec, normals);
+
+  EXPECT_FLOAT_EQ(out.manifold.GetProperties().volume, 1.0f / 6);
+}
