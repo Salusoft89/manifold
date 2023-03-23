@@ -431,11 +431,11 @@ PolygonsIdx To2DPolygon(const std::vector<std::vector<int>>& polygons,
 }
 
 /**
- * Constructs manifold from a vector of faces.
+ * Constructs a new manifold from a vector of faces.
  *
  * @param vertPos Vertex positions
- * @param polygonsVec Polygons defining the faces
- * @param normals Normals of the faces
+ * @param polygonsVec Planar polygons defining the faces
+ * @param normals Face normals
  */
 PolyhedronOutput Manifold::Polyhedron(
     const std::vector<glm::vec3> vertPos,

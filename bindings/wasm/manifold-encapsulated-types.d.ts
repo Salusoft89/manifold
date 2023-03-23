@@ -133,11 +133,11 @@ export function intersection(manifolds: Manifold[]): Manifold;
 
 
 /**
- * Constructs manifold from a vector of faces.
+ * Constructs a new manifold from a vector of faces.
  *
  * @param vertPos Vertex positions
- * @param polygonsVec Polygons defining the faces
- * @param normals Normals of the faces
+ * @param polygonsVec Planar polygons defining the faces
+ * @param normals Face normals
  */
 export function polyhedron(
     vertPos: Vec3[], polygonsVec: number[][][],
