@@ -441,11 +441,8 @@ PolyhedronOutput Manifold::Polyhedron(
     const std::vector<glm::vec3> vertPos,
     const std::vector<std::vector<std::vector<int>>>& polygonsVec,
     const std::vector<glm::vec3> normals) {
-  auto pImpl_ = std::make_shared<Impl>();
-  for (auto& v : vertPos) {
-    pImpl_->vertPos_.push_back(v);
-  }
-  VecDH<glm::ivec3> triVerts;
+  Mesh mesh;
+  mesh.vertPos = vertPos;
   std::vector<int> triFace;
 
   for (int i = 0; i < polygonsVec.size(); i++) {
@@ -466,17 +463,11 @@ PolyhedronOutput Manifold::Polyhedron(
       tris = Triangulate(polygons2d);
     }
     for (auto& tri : tris) {
-      triVerts.push_back(tri);
+      mesh.triVerts.push_back(tri);
       triFace.push_back(i);
     }
   }
-  pImpl_->CreateHalfedges(triVerts);
-  pImpl_->Finish();
-  pImpl_->meshRelation_.originalID = ReserveIDs(1);
-  pImpl_->InitializeOriginal();
-  pImpl_->CreateFaces();
-  auto manifold = Manifold(pImpl_);
-  return {manifold, triFace};
+  return {Manifold(mesh), triFace};
 }
 
 /**
